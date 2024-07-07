@@ -1,4 +1,4 @@
-package io.jero.kmpmovies
+package io.jero.kmpmovies.data
 
 data class Movie(
     val id: Int,

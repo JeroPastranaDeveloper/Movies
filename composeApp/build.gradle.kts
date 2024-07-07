@@ -49,6 +49,14 @@ kotlin {
             // Ktor
             implementation(libs.coil.network.ktor)
             implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.contentnegotiation)
+            implementation(libs.ktor.serialization.json)
+
+            // Navigation
+            implementation(libs.androidx.navigation.compose)
+
+            // ViewModel
+            implementation(libs.androidx.lifecycle.viewmodel.compose)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
@@ -94,8 +102,4 @@ android {
 
 dependencies {
     debugImplementation(compose.uiTooling)
-
-    // Navigation
-    implementation(libs.androidx.navigation.compose)
-    implementation(libs.kotlinx.serialization.json)
 }
