@@ -1,7 +1,7 @@
-package io.jero.kmpmovies.ui.screens.home
+package io.jero.kmpmovies.data.repository
 
-import io.jero.kmpmovies.RemoteMovie
 import io.jero.kmpmovies.data.Movie
+import io.jero.kmpmovies.data.RemoteMovie
 
 fun RemoteMovie.toDomain() = Movie(
     id = id,

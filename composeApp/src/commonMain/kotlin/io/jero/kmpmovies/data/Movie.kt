@@ -1,9 +1,9 @@
 package io.jero.kmpmovies.data
 
 data class Movie(
-    val id: Int,
-    val title: String,
-    val poster: String
+    val id: Int = 0,
+    val title: String = "",
+    val poster: String = ""
 )
 
 val movies = (1..100).map {

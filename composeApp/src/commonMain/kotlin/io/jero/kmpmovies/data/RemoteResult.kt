@@ -1,4 +1,4 @@
-package io.jero.kmpmovies
+package io.jero.kmpmovies.data
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
