@@ -10,6 +10,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import io.jero.kmpmovies.data.MoviesService
 import io.jero.kmpmovies.data.repository.MoviesRepository
+import io.jero.kmpmovies.data.room.database.MoviesDao
 import io.jero.kmpmovies.ui.screens.detail.DetailScreen
 import io.jero.kmpmovies.ui.screens.detail.DetailViewModel
 import io.jero.kmpmovies.ui.screens.home.HomeScreen
@@ -20,14 +21,12 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.http.URLProtocol
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
-import movies.composeapp.generated.resources.Res
-import movies.composeapp.generated.resources.api_key
-import org.jetbrains.compose.resources.stringResource
+import org.jero.movies.BuildConfig
 
 @Composable
-fun Navigation() {
+fun Navigation(moviesDao: MoviesDao) {
     val navController = rememberNavController()
-    val repository = rememberMoviesRepository()
+    val repository = rememberMoviesRepository(moviesDao)
 
     NavHost(navController = navController, startDestination = "home") {
         composable("home") {
@@ -52,9 +51,7 @@ fun Navigation() {
 }
 
 @Composable
-private fun rememberMoviesRepository(
-    apiKey: String = stringResource(Res.string.api_key)
-): MoviesRepository = remember {
+private fun rememberMoviesRepository(moviesDao: MoviesDao): MoviesRepository = remember {
     val client =
         HttpClient {
             install(ContentNegotiation) {
@@ -66,10 +63,10 @@ private fun rememberMoviesRepository(
                 url {
                     protocol = URLProtocol.HTTPS
                     host = "api.themoviedb.org"
-                    parameters.append("api_key", apiKey)
+                    parameters.append("api_key", BuildConfig.API_KEY)
                 }
             }
         }
 
-    MoviesRepository(MoviesService(client))
+    MoviesRepository(MoviesService(client), moviesDao)
 }

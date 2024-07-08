@@ -11,4 +11,4 @@ class MoviesService(
 suspend fun MoviesService.fetchPopularMovies(): RemoteResult =
     client.get("/3/discover/movie?sort_by=popularity.desc").body<RemoteResult>()
 
-suspend fun MoviesService.fetchMovie(movieId: Int): RemoteMovie = client.get("/3/movie/$movieId").body<RemoteMovie>()
+suspend fun MoviesService.fetchMovieById(movieId: Int): RemoteMovie = client.get("/3/movie/$movieId").body<RemoteMovie>()

@@ -1,5 +1,6 @@
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -7,6 +8,9 @@ plugins {
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.androidxRoom)
+    alias(libs.plugins.gradleBuildConfig)
 }
 
 kotlin {
@@ -57,9 +61,17 @@ kotlin {
 
             // ViewModel
             implementation(libs.androidx.lifecycle.viewmodel.compose)
+
+            //Room
+            implementation(libs.androidx.room.runtime)
+            implementation(libs.androidx.sqlite.bundled)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
+        }
+
+        sourceSets.commonMain {
+            kotlin.srcDir("build/generated/ksp/metadata")
         }
 
         task("testClasses")
@@ -98,8 +110,30 @@ android {
     buildFeatures {
         compose = true
     }
+    dependencies {
+        debugImplementation(compose.uiTooling)
+    }
 }
 
 dependencies {
-    debugImplementation(compose.uiTooling)
+    add("kspCommonMainMetadata", libs.androidx.room.compiler)
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinCompile<*>>().configureEach {
+    if (name != "kspCommonMainKotlinMetadata") {
+        dependsOn("kspCommonMainKotlinMetadata")
+    }
+}
+
+room {
+    schemaDirectory("$projectDir/schemas")
+}
+
+buildConfig {
+    packageName("org.jero.movies")
+
+    val properties = Properties()
+    properties.load(File(rootDir, "local.properties").reader())
+    val apiKey = properties.getProperty("API_KEY")
+    buildConfigField("API_KEY", apiKey)
 }

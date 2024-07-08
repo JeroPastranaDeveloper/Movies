@@ -18,7 +18,9 @@ class DetailViewModel(
     init {
         viewModelScope.launch {
             state = UiState(isLoading = true)
-            state = UiState(movie = repository.fetchMovieById(movieId), isLoading = false)
+            repository.fetchMovieById(movieId).collect { movie ->
+                movie?.let { state = UiState(movie = it, isLoading = false) }
+            }
         }
     }
 }

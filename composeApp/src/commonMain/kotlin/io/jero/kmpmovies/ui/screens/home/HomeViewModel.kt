@@ -17,10 +17,15 @@ class HomeViewModel(private val repository: MoviesRepository) : ViewModel() {
             state = UiState(
                 isLoading = true
             )
-            state = UiState(
-                movies = repository.fetchPopularMovies(),
-                isLoading = false
-            )
+
+            repository.movies.collect { movies ->
+                if (movies.isNotEmpty()) {
+                    state = UiState(
+                        movies = movies,
+                        isLoading = false
+                    )
+                }
+            }
         }
     }
 }
